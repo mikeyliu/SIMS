@@ -47,4 +47,5 @@ public:
 	afx_msg void OnBnClickedAddButton();
 	afx_msg void OnBnClickedAlterButton();
 	afx_msg void OnBnClickedDeleteButton();
+	afx_msg void OnBnClickedShowAllBt();
 };

@@ -80,6 +80,7 @@ BEGIN_MESSAGE_MAP(CsqlDlg, CDialog)
 	ON_BN_CLICKED(IDC_ADD_BUTTON, &CsqlDlg::OnBnClickedAddButton)
 	ON_BN_CLICKED(IDC_ALTER_BUTTON, &CsqlDlg::OnBnClickedAlterButton)
 	ON_BN_CLICKED(IDC_DELETE_BUTTON, &CsqlDlg::OnBnClickedDeleteButton)
+	ON_BN_CLICKED(ID_SHOW_ALL_BT, &CsqlDlg::OnBnClickedShowAllBt)
 END_MESSAGE_MAP()
 
 
@@ -296,6 +297,26 @@ void CsqlDlg::OnBnClickedAddButton()
 void CsqlDlg::OnBnClickedAlterButton()
 {
 	// TODO: 在此添加控件通知处理程序代码
+	/*CString str;
+	GetDlgItemText(IDC_NUM_EDIT, str);*/
+	UpdateData(TRUE);
+	Cscore m_set;
+	if (m_set.IsOpen())
+		m_set.Close();
+	m_set.Open();
+	m_set.Edit(); // To edit a record, first set up the edit buffer
+	m_set.m_usualscore = m_usualEdit; // Then edit field data members for the record
+	m_set.m_testscore = m_testEdit;
+	m_set.m_totalscore = m_totalEdit;
+
+	// Finally, complete the operation
+	if (!m_set.Update())
+	{
+		// Handle the failure to update
+		AfxMessageBox(_T("Couldn't update record!"));
+	}
+	UpdateData(FALSE);
+	m_set.Close();
 }
 
 
@@ -310,6 +331,7 @@ void CsqlDlg::OnBnClickedDeleteButton()
 		m_set.Close();
 	m_set.Open();
 	m_set.MoveFirst();
+	
 	while (!m_set.IsEOF()) {
 		if (m_set.m_stuid == str) {
 			m_set.Delete();
@@ -319,5 +341,12 @@ void CsqlDlg::OnBnClickedDeleteButton()
 		m_set.MoveNext();
 	}
 	m_set.Close();
+	list_All(_T("select * from score order by stuid"));
+}
+
+
+void CsqlDlg::OnBnClickedShowAllBt()
+{
+	// TODO: 在此添加控件通知处理程序代码
 	list_All(_T("select * from score order by stuid"));
 }
